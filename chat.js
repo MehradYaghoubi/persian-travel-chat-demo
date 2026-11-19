@@ -96,3 +96,92 @@ reset.addEventListener('click', () => {
   input.focus();
 });
 start();
+
+const contact = document.querySelector('#contact');
+const support = document.querySelector('#support');
+const supportInput = document.querySelector('#support-message');
+const channel = document.querySelector('#support-channel');
+let sessionId;
+let cursor = 0;
+let timer;
+let generation = 0;
+let sending = false;
+
+async function supportRequest(path = '', body) {
+  const res = await fetch('/api/customer' + path, body === undefined ? {} : {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.detail || 'خطای سرور محلی');
+  return data;
+}
+
+function showSupportHistory(data) {
+  for (const message of data.messages.slice(cursor)) {
+    addMessage(message.role === 'user' ? message.text : 'اپراتور: ' + message.text,
+      message.role === 'user' ? 'user' : 'bot');
+  }
+  cursor = data.messages.length;
+  if (!data.active) {
+    addMessage('این گفتگو بسته شد.');
+    support.hidden = true;
+    clearTimeout(timer);
+  }
+}
+
+async function pollSupport(id, version) {
+  try {
+    const data = await supportRequest('/' + id);
+    if (version !== generation) return;
+    showSupportHistory(data);
+    if (data.active) timer = setTimeout(() => pollSupport(id, version), 2200);
+  } catch (error) {
+    if (version === generation) addMessage(error.message);
+  }
+}
+
+contact.addEventListener('click', () => {
+  chat.hidden = true;
+  contact.hidden = true;
+  support.hidden = false;
+  addMessage('خدمت موردنظر و پیام خود را وارد کنید. پیام در صف محلی اپراتور قرار می‌گیرد.');
+  supportInput.focus();
+});
+support.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const message = supportInput.value.trim();
+  if (!message || sending) return;
+  sending = true;
+  const version = generation;
+  const existing = sessionId;
+  clearTimeout(timer);
+  try {
+    if (existing) {
+      const data = await supportRequest('/' + existing, { message });
+      if (version !== generation) return;
+      showSupportHistory(data);
+    } else {
+      const result = await supportRequest('', { channel: channel.value, message });
+      if (version !== generation) return;
+      sessionId = result.session_id;
+      channel.disabled = true;
+      addMessage('درخواست به صف اپراتور اضافه شد.');
+    }
+    supportInput.value = '';
+  } catch (error) {
+    if (version === generation) addMessage(error.message);
+  } finally {
+    sending = false;
+    if (version === generation && sessionId && !support.hidden) pollSupport(sessionId, version);
+  }
+});
+reset.addEventListener('click', () => {
+  generation++;
+  clearTimeout(timer);
+  sessionId = undefined;
+  cursor = 0;
+  channel.disabled = false;
+  support.hidden = true;
+  supportInput.value = '';
+  contact.hidden = false;
+});

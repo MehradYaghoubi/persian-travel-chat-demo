@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'none'; form-action 'none'; base-uri 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; form-action 'none'; base-uri 'none'">
   <title>گفت‌وگوی سفر | نسخه نمایشی</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="offer-picker.css">
@@ -16,9 +16,17 @@
       <header class="chat-hdr">
         <div><h1 id="title">دستیار سفر</h1>
         <p>پیشنهادهای نمونه پرواز و هتل را در یک گفت‌وگو بررسی کنید.</p></div>
-        <button id="reset" type="button">شروع دوباره</button>
+        <div class="top-actions"><button id="reset" type="button">شروع دوباره</button><a href="/operator">پنل اپراتور</a></div>
       </header>
       <div class="chat-body" id="messages" role="log" aria-label="پیام‌های گفت‌وگو"></div>
+      <form class="chat-foot" id="support" hidden>
+        <div class="chat-send-row">
+          <select aria-label="صف خدمت" id="support-channel"><option value="ground">سفر زمینی</option><option value="flight">پرواز</option><option value="package">پرواز و اقامت</option></select>
+          <input id="support-message" aria-label="پیام به اپراتور" maxlength="2000" required placeholder="پیام به اپراتور محلی">
+          <button type="submit">ارسال</button>
+        </div>
+      </form>
+      <button id="contact" type="button">گفتگو با اپراتور محلی</button>
       <form class="chat-foot" id="chat">
         <div class="chat-send-row"><input id="message" aria-label="پاسخ شما" autocomplete="off" maxlength="80" required>
         <button id="sendBtn" type="submit">ارسال</button></div>

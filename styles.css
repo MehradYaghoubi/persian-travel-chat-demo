@@ -60,3 +60,9 @@ body{font-family:Tahoma,sans-serif}
 .msg.notice,.offer-picker{max-width:100%;align-self:stretch;flex-shrink:0}
 .offer-picker{padding:16px;border:1px solid var(--brand-line);border-radius:14px;background:#fff}
 button:focus-visible,input:focus-visible{outline:2px solid #087f8c;outline-offset:2px}
+
+.top-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.top-actions a{color:#fff;font-size:13px}
+#contact{align-self:flex-start;margin:8px 16px;padding:8px 12px;font:inherit;border:1px solid #9cabb8;border-radius:8px;background:#fff;color:#183044;cursor:pointer}
+#support button{width:auto;padding:0 14px;border-radius:12px;font:inherit}
+#support select{font:inherit;max-width:105px}
