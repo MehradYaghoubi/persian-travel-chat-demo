@@ -41,3 +41,7 @@ The server only listens on localhost and writes test conversations and accounts 
 ![A customer receiving a local operator reply on mobile](screenshots/mobile.png)
 
 </details>
+
+## License
+
+The code and documentation in this repository are available under the [MIT License](LICENSE).
