@@ -1,0 +1,22 @@
+.offer-picker{width:100%;min-width:0;box-sizing:border-box;color:var(--brand-ink,#183044);font-family:inherit}
+.offer-picker h4{margin:0 0 12px;font-size:15px;color:inherit}
+.offer-group-label{margin:16px 0 8px;font-size:13px;font-weight:700;color:var(--brand-ink,#183044)}
+.offer-option{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px 14px;width:100%;min-width:0;margin:8px 0;padding:14px;border:1px solid var(--brand-line,#dce5ea);border-radius:12px;background:var(--brand-panel,#fff);color:var(--brand-ink,#183044);text-align:right;font:inherit;line-height:1.9;cursor:pointer;box-sizing:border-box}
+.offer-option:hover{border-color:var(--brand-primary,#ff5722)}
+.offer-option:focus-visible{outline:3px solid var(--brand-primary,#ff5722);outline-offset:3px}
+.offer-option[aria-pressed=true]{border:2px solid var(--brand-primary,#ff5722);padding:13px;background:var(--brand-soft,#fff3ed);color:var(--brand-ink,#183044)}
+.offer-copy{display:flex;flex-direction:column;gap:5px;min-width:0;overflow-wrap:anywhere}
+.offer-title{font-size:14px;font-weight:750;color:inherit}
+.offer-description,.offer-date,.offer-extras{font-size:12px;color:var(--brand-ink,#183044)}
+.offer-date{font-variant-numeric:tabular-nums}
+.offer-value{display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;gap:12px;font-size:14px;font-weight:750;color:var(--brand-ink,#183044);white-space:nowrap}
+.offer-selection{font-size:11px;font-weight:500;color:var(--brand-ink,#183044)}
+.offer-option[aria-pressed=true] .offer-selection{color:var(--brand-ink,#183044);font-weight:750}
+.offer-option:disabled{cursor:wait;opacity:.72}
+.offer-option[data-unavailable=true]:disabled{cursor:not-allowed}
+.offer-controls{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.offer-controls button{padding:10px 14px;border-radius:9px;border:1px solid var(--brand-line,#dce5ea);font:inherit;font-size:12px;cursor:pointer;background:var(--brand-panel,#fff);color:var(--brand-ink,#183044)}
+.offer-controls .offer-confirm{background:var(--brand-header,#102b4e);color:var(--brand-header-ink,#fff);border-color:var(--brand-header,#102b4e)}
+.offer-controls button:disabled{opacity:.55;cursor:not-allowed}
+.offer-summary{min-height:24px;margin-top:8px;font-size:12px;color:var(--brand-ink,#183044)}
+@media(max-width:480px){.offer-option{grid-template-columns:minmax(0,1fr)}.offer-value{flex-direction:row;align-items:center;flex-wrap:wrap}.offer-title{font-size:13px}}

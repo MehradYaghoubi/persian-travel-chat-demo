@@ -9,7 +9,11 @@ const fields = [
   { key: 'count', prompt: 'چند نفر سفر می‌کنید؟', hint: 'مثال: ۲' },
 ];
 const format = new Intl.NumberFormat('fa-IR');
-const examplePrice = 1200000;
+const exampleOffers = [
+  { id: 'F1', service: 'flight', title: 'پرواز نمونه صبح', description: 'ساعت ۹:۳۰', unitPrice: 1200000 },
+  { id: 'F2', service: 'flight', title: 'پرواز نمونه عصر', description: 'ساعت ۱۷:۰۰', unitPrice: 1500000 },
+  { id: 'H1', service: 'hotel', title: 'اقامت نمونه', description: 'یک شب برای گروه', unitPrice: 900000 },
+];
 let trip = {};
 let step = 0;
 
@@ -61,15 +65,30 @@ chat.addEventListener('submit', (event) => {
     input.focus();
     return;
   }
-  addMessage([
-    'خلاصه سفر فرضی',
-    `مسیر: ${trip.origin} به ${trip.destination}`,
-    `تاریخ: ${trip.date}`,
-    `مسافران: ${format.format(trip.count)} نفر`,
-    `مبلغ کاملا فرضی: ${format.format(examplePrice * trip.count)} تومان`,
-  ].join('\n'), 'bot', true);
   chat.hidden = true;
-  reset.focus();
+  addMessage('گزینه‌های زیر فرضی هستند. از هر بخش یک گزینه انتخاب کنید.');
+  const offers = exampleOffers.map(({ unitPrice, ...offer }) => ({
+    ...offer,
+    price: unitPrice * (offer.service === 'flight' ? trip.count : 1),
+  }));
+  const picker = window.createOfferPicker(offers, (ids) => {
+    const picked = offers.filter((offer) => ids.includes(offer.id));
+    const total = picked.reduce((sum, offer) => sum + offer.price, 0);
+    picker.remove();
+    addMessage([
+      'خلاصه سفر فرضی',
+      `مسیر: ${trip.origin} به ${trip.destination}`,
+      `تاریخ: ${trip.date}`,
+      `مسافران: ${format.format(trip.count)} نفر`,
+      ...picked.map((offer) => `${offer.title} · ${format.format(offer.price)} تومان`),
+      `جمع فرضی: ${format.format(total)} تومان`,
+      'این پیش‌نمایش هیچ رزروی ثبت نمی‌کند.',
+    ].join('\n'), 'bot', true);
+    reset.focus();
+  });
+  messages.append(picker);
+  picker.scrollIntoView({ block: 'end' });
+  picker.querySelector('.offer-option')?.focus({ preventScroll: true });
 });
 
 reset.addEventListener('click', () => {
