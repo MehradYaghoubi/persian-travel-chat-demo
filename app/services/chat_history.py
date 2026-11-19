@@ -13,6 +13,7 @@ import threading
 import time
 import uuid
 from collections import OrderedDict
+from contextlib import closing, contextmanager
 from dataclasses import dataclass, field, asdict
 from datetime import datetime
 from typing import Optional
@@ -75,12 +76,13 @@ class ChatHistoryManager:
         self._init_sqlite()
         self._load_from_disk()
 
+    @contextmanager
     def _connect(self):
         """Open a short-lived connection configured for concurrent local readers/writers."""
-        conn = sqlite3.connect(self.DB_PATH, timeout=15)
-        conn.execute("PRAGMA busy_timeout=15000")
-        conn.execute("PRAGMA foreign_keys=ON")
-        return conn
+        with closing(sqlite3.connect(self.DB_PATH, timeout=15)) as conn, conn:
+            conn.execute("PRAGMA busy_timeout=15000")
+            conn.execute("PRAGMA foreign_keys=ON")
+            yield conn
 
     def _init_sqlite(self):
         """راه‌اندازی جداول SQLite برای ایندکس و تاریخچه چت‌ها و انتقال‌ها."""
